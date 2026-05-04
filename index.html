@@ -16,24 +16,24 @@
   <style>
     :root {
       color-scheme: light;
-      --bg: #f7f4ee;
-      --surface: #ffffff;
-      --surface-alt: #f0ebe0;
-      --border: #cfc3a0;
-      --border-dark: #b8a87a;
+      --bg: #f4f0e6;
+      --surface: #faf7f1;
+      --surface-alt: #ece7d8;
+      --border: #c5b599;
+      --border-dark: #a08a60;
       --accent: #6b2323;
       --accent-light: #8c3030;
-      --gold: #b8922e;
-      --gold-light: #dfc070;
-      --text: #1e1810;
-      --text-muted: #5a4e35;
-      --text-light: #8a7a5a;
+      --gold: #8a6c18;
+      --gold-light: #c9a84c;
+      --text: #1a1510;
+      --text-muted: #4a3f2a;
+      --text-light: #7a6a4a;
       --explored: #265a42;
       --explored-bg: #d4ede0;
-      --current-bg: #fbe8e8;
-      --treatise-bg: #ede8dc;
+      --current-bg: #f5e6e6;
+      --treatise-bg: #ece7d8;
       --font: 'EB Garamond', Georgia, serif;
-      --shadow: 0 1px 4px rgba(0,0,0,0.07), 0 2px 12px rgba(0,0,0,0.04);
+      --shadow: 0 1px 2px rgba(0,0,0,0.05);
     }
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
@@ -51,73 +51,106 @@
     .header {
       background: var(--accent);
       color: white;
-      padding: 22px 5% 18px;
-      border-bottom: 3px solid var(--gold);
+      padding: 20px 5% 16px;
+      border-bottom: 2px solid var(--gold-light);
     }
     .header-top { display: flex; justify-content: space-between; align-items: flex-start; }
     .header h1 {
-      font-size: 1.6rem;
-      font-weight: 500;
-      letter-spacing: 0.02em;
+      font-size: 1.5rem;
+      font-weight: 400;
+      letter-spacing: 0.06em;
       line-height: 1.25;
+      font-variant: small-caps;
     }
     .header h1 span {
       display: block;
-      font-size: 0.95rem;
+      font-size: 0.88rem;
       color: var(--gold-light);
       font-style: italic;
       font-weight: 400;
+      font-variant: normal;
       margin-top: 3px;
+      letter-spacing: 0.02em;
     }
     .header-date {
-      font-size: 0.88rem;
+      font-size: 0.85rem;
       color: var(--gold-light);
       font-style: italic;
       text-align: right;
       line-height: 1.6;
     }
     .db-status {
-      font-size: 0.8rem;
+      font-size: 0.78rem;
       color: var(--gold-light);
       font-style: italic;
       text-align: right;
-      opacity: 0.8;
+      opacity: 0.75;
+    }
+
+    /* ── Hero Banner ─────────────────────────────────────────── */
+    .hero-banner {
+      width: 100%;
+      height: 260px;
+      overflow: hidden;
+      position: relative;
+      border-bottom: 2px solid var(--border-dark);
+    }
+    .hero-banner img {
+      width: 100%;
+      height: 100%;
+      object-fit: cover;
+      object-position: center 30%;
+      display: block;
+      filter: sepia(12%) contrast(0.95) brightness(0.92);
+    }
+    .hero-banner::after {
+      content: '';
+      position: absolute;
+      inset: 0;
+      background: linear-gradient(
+        to bottom,
+        rgba(107, 35, 35, 0.12) 0%,
+        transparent 40%,
+        rgba(20, 15, 8, 0.28) 100%
+      );
+      pointer-events: none;
     }
 
     /* ── Tab Nav ─────────────────────────────────────────────── */
     .tab-nav {
       display: flex;
-      background: var(--surface-alt);
-      border-bottom: 2px solid var(--border);
+      background: var(--surface);
+      border-bottom: 1px solid var(--border);
       padding: 0 5%;
       gap: 0;
     }
     .tab-btn {
       background: none;
       border: none;
-      border-bottom: 3px solid transparent;
-      padding: 14px 20px;
+      border-bottom: 2px solid transparent;
+      padding: 13px 18px;
       font-family: var(--font);
-      font-size: 1rem;
+      font-size: 0.92rem;
       color: var(--text-muted);
       cursor: pointer;
-      margin-bottom: -2px;
-      transition: all 0.15s;
-      letter-spacing: 0.01em;
+      margin-bottom: -1px;
+      transition: all 0.12s;
+      letter-spacing: 0.04em;
+      font-variant: small-caps;
     }
     .tab-btn:hover { color: var(--accent); }
     .tab-btn.active {
       color: var(--accent);
       border-bottom-color: var(--accent);
-      font-weight: 600;
+      font-weight: 500;
     }
 
     /* ── Main Layout ─────────────────────────────────────────── */
     .main {
-      width: 90%;
-      max-width: 1600px;
+      width: 88%;
+      max-width: 1500px;
       margin: 0 auto;
-      padding: 32px 0 48px;
+      padding: 36px 0 56px;
     }
     .tab-panel { display: none; }
     .tab-panel.active { display: block; }
@@ -126,41 +159,40 @@
     .progress-grid {
       display: grid;
       grid-template-columns: 1fr 1fr;
-      gap: 20px;
-      margin-bottom: 24px;
+      gap: 16px;
+      margin-bottom: 20px;
     }
     .progress-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 22px 28px;
+      border-radius: 2px;
+      padding: 20px 24px;
       box-shadow: var(--shadow);
     }
     .progress-card h3 {
-      font-size: 0.82rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: var(--accent);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 4px;
     }
     .vol-subtitle {
-      font-size: 0.9rem;
+      font-size: 0.88rem;
       color: var(--text-light);
       font-style: italic;
       margin-bottom: 14px;
     }
     .progress-bar-wrap {
       background: var(--border);
-      border-radius: 20px;
-      height: 9px;
+      border-radius: 1px;
+      height: 6px;
       margin-bottom: 8px;
       overflow: hidden;
     }
     .progress-bar-fill {
       height: 100%;
-      background: linear-gradient(90deg, var(--accent), var(--gold));
-      border-radius: 20px;
+      background: linear-gradient(90deg, var(--accent), var(--gold-light));
       transition: width 0.5s ease;
     }
     .progress-label { font-size: 0.88rem; color: var(--text-muted); }
@@ -170,37 +202,37 @@
     .focus-card {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-left: 5px solid var(--accent);
-      border-radius: 8px;
-      padding: 20px 28px;
-      margin-bottom: 24px;
+      border-left: 4px solid var(--accent);
+      border-radius: 2px;
+      padding: 18px 24px;
+      margin-bottom: 20px;
       box-shadow: var(--shadow);
     }
     .focus-card h3 {
-      font-size: 0.78rem;
+      font-size: 0.72rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       color: var(--text-light);
       margin-bottom: 6px;
     }
-    .focus-title { font-size: 1.2rem; color: var(--accent); margin-bottom: 4px; font-weight: 500; }
-    .focus-meta { font-size: 0.9rem; color: var(--text-muted); font-style: italic; }
+    .focus-title { font-size: 1.15rem; color: var(--accent); margin-bottom: 4px; font-weight: 400; font-style: italic; }
+    .focus-meta { font-size: 0.88rem; color: var(--text-muted); font-style: italic; }
 
     /* ── Generic Panel ───────────────────────────────────────── */
     .panel {
       background: var(--surface);
       border: 1px solid var(--border);
-      border-radius: 8px;
-      padding: 24px 28px;
-      margin-bottom: 24px;
+      border-radius: 2px;
+      padding: 22px 26px;
+      margin-bottom: 20px;
       box-shadow: var(--shadow);
     }
     .panel h3 {
-      font-size: 0.82rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: var(--accent);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 16px;
       padding-bottom: 10px;
@@ -208,41 +240,41 @@
     }
 
     /* ── Question Grid ───────────────────────────────────────── */
-    .treatise-section { margin-bottom: 28px; }
+    .treatise-section { margin-bottom: 26px; }
     .treatise-header {
-      font-size: 0.8rem;
+      font-size: 0.72rem;
       font-weight: 600;
       text-transform: uppercase;
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       color: var(--text-light);
       border-bottom: 1px solid var(--border);
-      padding-bottom: 7px;
+      padding-bottom: 6px;
       margin-bottom: 12px;
     }
-    .questions-grid { display: flex; flex-wrap: wrap; gap: 7px; }
+    .questions-grid { display: flex; flex-wrap: wrap; gap: 6px; }
     .q-chip {
-      width: 44px;
-      height: 44px;
-      border-radius: 5px;
+      width: 42px;
+      height: 42px;
+      border-radius: 2px;
       display: flex;
       align-items: center;
       justify-content: center;
-      font-size: 0.85rem;
+      font-size: 0.82rem;
       font-family: var(--font);
       cursor: pointer;
       border: 1px solid var(--border);
       background: var(--surface);
       color: var(--text-muted);
-      transition: all 0.15s;
+      transition: all 0.12s;
       position: relative;
     }
     .q-chip:hover {
       border-color: var(--accent);
       color: var(--accent);
       background: var(--current-bg);
-      transform: scale(1.08);
+      transform: scale(1.06);
       z-index: 1;
-      box-shadow: 0 2px 8px rgba(107,35,35,0.15);
+      box-shadow: 0 2px 6px rgba(107,35,35,0.12);
     }
     .q-chip.explored {
       background: var(--explored-bg);
@@ -262,25 +294,25 @@
       position: absolute;
       top: 1px;
       right: 3px;
-      font-size: 12px;
-      color: var(--gold);
+      font-size: 11px;
+      color: var(--gold-light);
     }
 
     /* ── Legend ──────────────────────────────────────────────── */
     .legend { display: flex; gap: 18px; margin-bottom: 18px; flex-wrap: wrap; }
-    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.88rem; color: var(--text-muted); }
-    .legend-dot { width: 15px; height: 15px; border-radius: 3px; border: 1px solid; flex-shrink: 0; }
+    .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.85rem; color: var(--text-muted); }
+    .legend-dot { width: 14px; height: 14px; border-radius: 2px; border: 1px solid; flex-shrink: 0; }
 
     /* ── Notes ───────────────────────────────────────────────── */
     .note-entry {
       background: var(--surface-alt);
       border: 1px solid var(--border);
-      border-radius: 6px;
+      border-radius: 2px;
       padding: 14px 18px;
-      margin-bottom: 12px;
+      margin-bottom: 10px;
     }
     .note-entry .note-meta {
-      font-size: 0.82rem;
+      font-size: 0.8rem;
       color: var(--text-light);
       margin-bottom: 7px;
       display: flex;
@@ -290,11 +322,11 @@
     .note-entry .note-text {
       font-size: 1rem;
       color: var(--text);
-      line-height: 1.65;
+      line-height: 1.7;
       padding-left: 14px;
     }
-    .note-type-quote { border-left: 4px solid var(--gold); }
-    .note-type-note { border-left: 4px solid var(--accent); }
+    .note-type-quote { border-left: 3px solid var(--gold-light); }
+    .note-type-note { border-left: 3px solid var(--accent); }
     .delete-btn {
       background: none; border: none; color: var(--text-light);
       cursor: pointer; font-size: 0.82rem; padding: 0 4px; flex-shrink: 0;
@@ -305,25 +337,25 @@
     .add-form {
       background: var(--treatise-bg);
       border: 1px solid var(--border);
-      border-radius: 6px;
-      padding: 20px 24px;
-      margin-top: 16px;
+      border-radius: 2px;
+      padding: 18px 22px;
+      margin-top: 14px;
     }
     .add-form h4 {
-      font-size: 0.82rem;
+      font-size: 0.75rem;
       font-weight: 600;
       color: var(--text-muted);
       margin-bottom: 12px;
       text-transform: uppercase;
-      letter-spacing: 0.08em;
+      letter-spacing: 0.1em;
     }
     .form-row { display: flex; gap: 10px; margin-bottom: 10px; flex-wrap: wrap; }
     .form-row select, .form-row input {
       font-family: var(--font);
       font-size: 0.95rem;
-      padding: 7px 12px;
+      padding: 7px 11px;
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 2px;
       background: white;
       color: var(--text);
     }
@@ -333,34 +365,35 @@
       font-size: 0.95rem;
       padding: 10px 12px;
       border: 1px solid var(--border);
-      border-radius: 5px;
+      border-radius: 2px;
       background: white;
       color: var(--text);
       resize: vertical;
       min-height: 80px;
-      line-height: 1.6;
+      line-height: 1.65;
     }
     .btn {
       background: var(--accent);
       color: white;
       border: none;
       padding: 8px 20px;
-      border-radius: 5px;
+      border-radius: 2px;
       font-family: var(--font);
-      font-size: 0.95rem;
+      font-size: 0.92rem;
       cursor: pointer;
-      transition: background 0.15s;
-      letter-spacing: 0.01em;
+      transition: background 0.12s;
+      letter-spacing: 0.03em;
+      font-variant: small-caps;
     }
     .btn:hover { background: var(--accent-light); }
-    .btn-sm { padding: 5px 13px; font-size: 0.88rem; }
+    .btn-sm { padding: 5px 12px; font-size: 0.85rem; }
 
     /* ── Session Log ─────────────────────────────────────────── */
     .session-entry { border-bottom: 1px solid var(--border); padding: 14px 0; }
     .session-entry:last-child { border-bottom: none; }
-    .session-date { font-size: 0.85rem; color: var(--text-light); font-style: italic; margin-bottom: 4px; }
+    .session-date { font-size: 0.82rem; color: var(--text-light); font-style: italic; margin-bottom: 4px; }
     .session-q { font-size: 1rem; color: var(--accent); margin-bottom: 3px; font-weight: 500; }
-    .session-note { font-size: 0.95rem; color: var(--text-muted); line-height: 1.55; }
+    .session-note { font-size: 0.95rem; color: var(--text-muted); line-height: 1.6; }
 
     /* ── Misc ────────────────────────────────────────────────── */
     .empty-state {
@@ -377,12 +410,14 @@
       margin-bottom: 16px;
     }
     .section-title {
-      font-size: 1.05rem;
+      font-size: 1rem;
       color: var(--accent);
       padding-bottom: 8px;
       border-bottom: 1px solid var(--border);
       flex: 1;
-      font-weight: 500;
+      font-weight: 400;
+      font-variant: small-caps;
+      letter-spacing: 0.05em;
     }
 
     /* ── Reading Panel ───────────────────────────────────────── */
@@ -402,8 +437,8 @@
     .reading-header {
       background: var(--accent);
       color: white;
-      padding: 20px 5%;
-      border-bottom: 3px solid var(--gold);
+      padding: 18px 5%;
+      border-bottom: 2px solid var(--gold-light);
       flex-shrink: 0;
       display: flex;
       justify-content: space-between;
@@ -411,24 +446,25 @@
     }
     .reading-header-text { flex: 1; }
     .reading-q-label {
-      font-size: 0.8rem;
+      font-size: 0.75rem;
       color: var(--gold-light);
-      letter-spacing: 0.1em;
+      letter-spacing: 0.12em;
       text-transform: uppercase;
       margin-bottom: 4px;
       font-weight: 500;
     }
     .reading-q-title {
-      font-size: 1.4rem;
+      font-size: 1.3rem;
       font-weight: 400;
       line-height: 1.3;
+      font-style: italic;
     }
     .reading-close {
       background: none;
       border: none;
       color: var(--gold-light);
       cursor: pointer;
-      font-size: 1.6rem;
+      font-size: 1.5rem;
       padding: 0 0 0 24px;
       line-height: 1;
       flex-shrink: 0;
@@ -436,9 +472,9 @@
     .reading-close:hover { color: white; }
 
     .reading-toolbar {
-      background: var(--surface-alt);
+      background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 12px 5%;
+      padding: 11px 5%;
       display: flex;
       gap: 12px;
       align-items: center;
@@ -457,18 +493,18 @@
     }
 
     .reading-body .q-section-title {
-      font-size: 1.2rem;
+      font-size: 1.15rem;
       color: var(--accent);
       font-variant: small-caps;
-      letter-spacing: 0.05em;
+      letter-spacing: 0.06em;
       margin-bottom: 8px;
       margin-top: 32px;
-      font-weight: 500;
+      font-weight: 400;
     }
     .reading-body .q-article-header {
-      font-size: 0.82rem;
+      font-size: 0.75rem;
       color: var(--text-light);
-      letter-spacing: 0.07em;
+      letter-spacing: 0.1em;
       text-transform: uppercase;
       margin-bottom: 5px;
       margin-top: 36px;
@@ -477,7 +513,7 @@
       padding-top: 20px;
     }
     .reading-body .q-article-title {
-      font-size: 1.1rem;
+      font-size: 1.08rem;
       color: var(--accent-light);
       font-style: italic;
       margin-bottom: 16px;
@@ -487,7 +523,7 @@
       color: var(--text);
       margin-bottom: 1.1em;
       padding-left: 20px;
-      border-left: 2px solid var(--gold);
+      border-left: 2px solid var(--gold-light);
     }
     .reading-body .q-objection .obj-label {
       color: var(--gold);
@@ -529,6 +565,10 @@
       <div class="db-status" id="dbStatus">Initializing...</div>
     </div>
   </div>
+</div>
+
+<div class="hero-banner">
+  <img src="./my.jpg" alt="Summa Theologica illuminated manuscript" />
 </div>
 
 <div class="tab-nav">
