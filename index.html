@@ -452,9 +452,8 @@
       font-size: 1.1rem;
       line-height: 2.0;
       color: var(--text);
-      max-width: 860px;
-      margin: 0 auto;
       width: 100%;
+      box-sizing: border-box;
     }
 
     .reading-body .q-section-title {
@@ -485,22 +484,31 @@
       line-height: 1.5;
     }
     .reading-body .q-objection {
-      color: var(--text-muted);
-      margin-bottom: 12px;
+      color: var(--text);
+      margin-bottom: 1.1em;
       padding-left: 20px;
-      border-left: 2px solid var(--border);
+      border-left: 2px solid var(--gold);
+    }
+    .reading-body .q-objection .obj-label {
+      color: var(--gold);
+      font-weight: 600;
     }
     .reading-body .q-answer { margin-bottom: 12px; }
+    .reading-body p.q-body {
+      margin: 0 0 1.1em 0;
+      text-align: justify;
+      hyphens: auto;
+    }
     .reading-body .q-separator {
       border: none;
       border-top: 1px solid var(--border);
       margin: 24px 0;
     }
     .reading-body pre {
-      white-space: pre-wrap;
       font-family: var(--font);
       font-size: 1.05rem;
       line-height: 2.0;
+      white-space: normal;
     }
     .loading-text {
       color: var(--text-light);
@@ -793,7 +801,6 @@ function closeReading() {
 }
 
 function formatQuestionText(raw) {
-  // Render the plain text with basic structure highlighting
   const escaped = raw
     .replace(/&/g, '&amp;')
     .replace(/</g, '&lt;')
@@ -801,47 +808,96 @@ function formatQuestionText(raw) {
 
   const lines = escaped.split('\n');
   let html = '';
+  let buf = []; // buffer for consecutive plain-text lines → one <p>
+
+  function flushBuf() {
+    if (buf.length) {
+      html += `<p class="q-body">${buf.join(' ')}</p>`;
+      buf = [];
+    }
+  }
 
   for (let i = 0; i < lines.length; i++) {
     const line = lines[i].trim();
-    if (!line) { html += '<br>'; continue; }
+
+    // Blank line — flush current paragraph buffer
+    if (!line) { flushBuf(); continue; }
 
     // Article citation header e.g. FIRST ARTICLE [I-II, Q. 1, Art. 1]
     if (/^(FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)\s+ARTICLE/.test(line)) {
+      flushBuf();
       html += `<div class="q-article-header">${line}</div>`;
     }
     // Article question title (line after article header that starts with "Whether")
     else if (/^Whether\s/.test(line) && i > 0 && /ARTICLE/.test(lines[i-1]||'')) {
+      flushBuf();
       html += `<div class="q-article-title">${line}</div>`;
     }
     // Separator lines
     else if (/^[_\-]{5,}$/.test(line)) {
+      flushBuf();
       html += '<hr class="q-separator">';
     }
-    // Objection lines
+    // Objection lines — each is its own block but may continue on next line
     else if (/^Obj\.\s+\d+:/.test(line) || /^Objection\s+\d+:/.test(line)) {
-      html += `<div class="q-objection">${line}</div>`;
+      flushBuf();
+      // Gather continuation lines (non-blank, non-special)
+      let block = line;
+      while (i + 1 < lines.length) {
+        const next = lines[i+1].trim();
+        if (!next || /^(Obj\.|Objection|Reply|I answer|On the contrary|FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)/.test(next)) break;
+        block += ' ' + next;
+        i++;
+      }
+      html += `<p class="q-objection">${block.replace(/^((?:Obj\.\s*\d+|Objection\s*\d+|Reply\s+Obj\.\s*\d+)[^:]*:)/, '<span class="obj-label">$1</span>')}</p>`;
     }
     // Reply lines
     else if (/^Reply\s+Obj\./.test(line)) {
-      html += `<div class="q-objection">${line}</div>`;
+      flushBuf();
+      let block = line;
+      while (i + 1 < lines.length) {
+        const next = lines[i+1].trim();
+        if (!next || /^(Obj\.|Objection|Reply|I answer|On the contrary|FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)/.test(next)) break;
+        block += ' ' + next;
+        i++;
+      }
+      html += `<p class="q-objection">${block.replace(/^((?:Obj\.\s*\d+|Objection\s*\d+|Reply\s+Obj\.\s*\d+)[^:]*:)/, '<span class="obj-label">$1</span>')}</p>`;
     }
     // "I answer that"
     else if (/^I answer that/.test(line)) {
-      html += `<div class="q-answer"><strong>I answer that,</strong> ${line.replace(/^I answer that,\s*/,'')}</div>`;
+      flushBuf();
+      let block = line.replace(/^I answer that,?\s*/, '');
+      while (i + 1 < lines.length) {
+        const next = lines[i+1].trim();
+        if (!next || /^(Obj\.|Objection|Reply|On the contrary|FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)/.test(next)) break;
+        block += ' ' + next;
+        i++;
+      }
+      html += `<p class="q-answer"><strong>I answer that,</strong> ${block}</p>`;
     }
     // "On the contrary"
     else if (/^On the contrary/.test(line)) {
-      html += `<div class="q-answer"><em>On the contrary,</em> ${line.replace(/^On the contrary,\s*/,'')}</div>`;
+      flushBuf();
+      let block = line.replace(/^On the contrary,?\s*/, '');
+      while (i + 1 < lines.length) {
+        const next = lines[i+1].trim();
+        if (!next || /^(Obj\.|Objection|Reply|I answer|FIRST|SECOND|THIRD|FOURTH|FIFTH|SIXTH|SEVENTH|EIGHTH|NINTH|TENTH)/.test(next)) break;
+        block += ' ' + next;
+        i++;
+      }
+      html += `<p class="q-answer"><em>On the contrary,</em> ${block}</p>`;
     }
     // ALL CAPS lines (titles, section headers)
     else if (line === line.toUpperCase() && line.length > 3 && !/^\(/.test(line) && !/^\[/.test(line)) {
+      flushBuf();
       html += `<div class="q-section-title">${line}</div>`;
     }
+    // Plain body text — accumulate into paragraph buffer
     else {
-      html += `<div>${line}</div>`;
+      buf.push(line);
     }
   }
+  flushBuf();
   return html;
 }
 
