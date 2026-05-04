@@ -38,9 +38,14 @@
 
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
+    html {
+      /* All rem units scale with this — the single lever for global text scaling */
+      font-size: clamp(14px, 1.05vw, 20px);
+    }
+
     body {
       font-family: var(--font);
-      font-size: 18px;
+      font-size: 1.1rem;
       background: var(--bg);
       color: var(--text);
       min-height: 100vh;
@@ -121,22 +126,25 @@
       display: flex;
       background: var(--surface);
       border-bottom: 1px solid var(--border);
-      padding: 0 5%;
+      padding: 0;
       gap: 0;
     }
     .tab-btn {
+      flex: 1;
       background: none;
       border: none;
       border-bottom: 2px solid transparent;
-      padding: 13px 18px;
+      padding: clamp(10px, 1.2vh, 16px) 0;
       font-family: var(--font);
-      font-size: 0.92rem;
+      font-size: clamp(0.85rem, 1.15vw, 1.5rem);
       color: var(--text-muted);
       cursor: pointer;
       margin-bottom: -1px;
       transition: all 0.12s;
-      letter-spacing: 0.04em;
+      letter-spacing: 0.05em;
       font-variant: small-caps;
+      text-align: center;
+      white-space: nowrap;
     }
     .tab-btn:hover { color: var(--accent); }
     .tab-btn.active {
@@ -253,8 +261,8 @@
     }
     .questions-grid { display: flex; flex-wrap: wrap; gap: 6px; }
     .q-chip {
-      width: 42px;
-      height: 42px;
+      width: 2.5rem;
+      height: 2.5rem;
       border-radius: 2px;
       display: flex;
       align-items: center;
@@ -301,7 +309,7 @@
     /* ── Legend ──────────────────────────────────────────────── */
     .legend { display: flex; gap: 18px; margin-bottom: 18px; flex-wrap: wrap; }
     .legend-item { display: flex; align-items: center; gap: 7px; font-size: 0.85rem; color: var(--text-muted); }
-    .legend-dot { width: 14px; height: 14px; border-radius: 2px; border: 1px solid; flex-shrink: 0; }
+    .legend-dot { width: 0.85rem; height: 0.85rem; border-radius: 2px; border: 1px solid; flex-shrink: 0; }
 
     /* ── Notes ───────────────────────────────────────────────── */
     .note-entry {
@@ -792,7 +800,8 @@ async function initDB() {
 
   const finalPP = await countRecords(db, 'pp');
   const finalPS = await countRecords(db, 'ps');
-  setStatus(`Text database ready (${finalPP} + ${finalPS} questions)`);
+  setStatus("");
+  
 }
 
 function getQuestion(vol, q) {
